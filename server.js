@@ -8,7 +8,7 @@ var mongo = require('mongodb').MongoClient,
    client = require('socket.io').listen(8080).sockets;
 
 // Connect to database
-mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', function(err, db) {
+mongo.connect('ds015899.mlab.com:15899/heroku_qlnfhl0c', pokeruser, pokerpass, function(err, db) {
    if (err) throw err;
 
    // Connect to websocket
