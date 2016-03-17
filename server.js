@@ -1,6 +1,6 @@
 // Set variables
 var express = require('express');
-var app = express.createServer(express.logger());
+var app = express.createServer();
 var mongojs = require('mongojs');
 var dbo = mongojs('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', ['players','games']);
 var bodyParser = require('body-parser');
