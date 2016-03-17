@@ -1,13 +1,11 @@
 // Set variables
 var express = require('express');
-var http = require('http')
-var app = express();
-var server = http.createServer(app);
+var app = express.createServer(express.logger());
 var mongojs = require('mongojs');
 var dbo = mongojs('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', ['players','games']);
 var bodyParser = require('body-parser');
 var mongo = require('mongodb').MongoClient,
-   client = require('socket.io').listen(http).sockets;
+   client = require('socket.io').listen(app).sockets;
 
 // Connect to database
 mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', function(err, db) {
@@ -191,5 +189,5 @@ app.post('/adminRemoveGame', function(req, res) {
 
 var port = Number(process.env.PORT || 3000);
 
-server.listen(port);
+app.listen(port);
 console.log("Server running on port " + port);
