@@ -1,6 +1,7 @@
 // Set variables
 var express = require('express');
 var app = express();
+var http = require('http').createServer(app);
 var mongojs = require('mongojs');
 var dbo = mongojs('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', ['players','games']);
 var bodyParser = require('body-parser');
@@ -64,11 +65,11 @@ mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnf
 
 });
 
-app.use(express.static(__dirname + "/public"));
-app.use(bodyParser.json());
+http.use(express.static(__dirname + "/public"));
+http.use(bodyParser.json());
 
 // Get all players
-app.post('/getPlayers', function(req, res) {
+http.post('/getPlayers', function(req, res) {
    console.log("Getting players.")
    dbo.players.find( { "accesscode": req.body.accesscode }, function(err, doc) {
       //console.log(doc);
@@ -77,7 +78,7 @@ app.post('/getPlayers', function(req, res) {
 });
 
 // Remove Game
-app.post('/removeGame', function(req, res) {
+http.post('/removeGame', function(req, res) {
    console.log("Removing players.")
    dbo.players.remove( { "accesscode": req.body.accesscode }, function(err, doc) {
       console.log("Players removed.")
@@ -91,7 +92,7 @@ app.post('/removeGame', function(req, res) {
 });
 
 // Get game by access code
-app.post('/getGame/:accesscode', function(req, res) {
+http.post('/getGame/:accesscode', function(req, res) {
    var accesscode = req.params.accesscode;
    console.log(accesscode);
 
@@ -102,7 +103,7 @@ app.post('/getGame/:accesscode', function(req, res) {
 });
 
 // Create New Game
-app.post('/createGame', function(req, res) {
+http.post('/createGame', function(req, res) {
    console.log("Creating a new game.");
    dbo.games.insert(req.body, function(err, doc) {
       res.json(doc);
@@ -110,7 +111,7 @@ app.post('/createGame', function(req, res) {
 });
 
 // Create New Player
-app.post('/createPlayer', function(req, res) {
+http.post('/createPlayer', function(req, res) {
    console.log("Creating a new player.");
    dbo.players.insert(req.body, function(err, doc) {
       res.json(doc);
@@ -118,7 +119,7 @@ app.post('/createPlayer', function(req, res) {
 });
 
 // Remove Player
-app.delete('/removePlayer/:id', function(req, res) {
+http.delete('/removePlayer/:id', function(req, res) {
    console.log("Removing player.");
    var id = req.params.id;
 
@@ -128,7 +129,7 @@ app.delete('/removePlayer/:id', function(req, res) {
 });
 
 // Get Player
-app.get('/getPlayer/:id', function(req, res) {
+http.get('/getPlayer/:id', function(req, res) {
    console.log("Getting player details.");
    var id = req.params.id;
    dbo.players.findOne({_id: mongojs.ObjectId(id)}, function(err, doc) {
@@ -138,7 +139,7 @@ app.get('/getPlayer/:id', function(req, res) {
 });
 
 // Get Player
-app.get('/getGame/:code', function(req, res) {
+http.get('/getGame/:code', function(req, res) {
    console.log("Getting game details.");
    var code = req.params.code;
    dbo.games.findOne({accesscode: code}, function(err, doc) {
@@ -148,7 +149,7 @@ app.get('/getGame/:code', function(req, res) {
 });
 
 // Update Player
-app.put('/updatePlayer/:id', function(req, res) {
+http.put('/updatePlayer/:id', function(req, res) {
    console.log("Updating player.");
    var id = req.params.id;
    console.log(id);
@@ -163,7 +164,7 @@ app.put('/updatePlayer/:id', function(req, res) {
 });
 
 // Get Games
-app.get('/getGames', function(req, res) {
+http.get('/getGames', function(req, res) {
    console.log("Getting games.");
    dbo.games.find({}, function(err, doc) {
       res.json(doc);
@@ -172,7 +173,7 @@ app.get('/getGames', function(req, res) {
 });
 
 // Remove Game
-app.post('/adminRemoveGame', function(req, res) {
+http.post('/adminRemoveGame', function(req, res) {
    console.log("Removing Game.");
    console.log(req.body.gameId)
 
@@ -189,5 +190,5 @@ app.post('/adminRemoveGame', function(req, res) {
 
 var port = Number(process.env.PORT || 3000);
 
-app.listen(port);
+http.listen(port);
 console.log("Server running on port " + port);
