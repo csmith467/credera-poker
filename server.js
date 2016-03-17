@@ -65,11 +65,11 @@ mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnf
 
 });
 
-http.use(express.static(__dirname + "/public"));
-http.use(bodyParser.json());
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.json());
 
 // Get all players
-http.post('/getPlayers', function(req, res) {
+app.post('/getPlayers', function(req, res) {
    console.log("Getting players.")
    dbo.players.find( { "accesscode": req.body.accesscode }, function(err, doc) {
       //console.log(doc);
@@ -78,7 +78,7 @@ http.post('/getPlayers', function(req, res) {
 });
 
 // Remove Game
-http.post('/removeGame', function(req, res) {
+app.post('/removeGame', function(req, res) {
    console.log("Removing players.")
    dbo.players.remove( { "accesscode": req.body.accesscode }, function(err, doc) {
       console.log("Players removed.")
@@ -92,7 +92,7 @@ http.post('/removeGame', function(req, res) {
 });
 
 // Get game by access code
-http.post('/getGame/:accesscode', function(req, res) {
+app.post('/getGame/:accesscode', function(req, res) {
    var accesscode = req.params.accesscode;
    console.log(accesscode);
 
@@ -103,7 +103,7 @@ http.post('/getGame/:accesscode', function(req, res) {
 });
 
 // Create New Game
-http.post('/createGame', function(req, res) {
+app.post('/createGame', function(req, res) {
    console.log("Creating a new game.");
    dbo.games.insert(req.body, function(err, doc) {
       res.json(doc);
@@ -111,7 +111,7 @@ http.post('/createGame', function(req, res) {
 });
 
 // Create New Player
-http.post('/createPlayer', function(req, res) {
+app.post('/createPlayer', function(req, res) {
    console.log("Creating a new player.");
    dbo.players.insert(req.body, function(err, doc) {
       res.json(doc);
@@ -119,7 +119,7 @@ http.post('/createPlayer', function(req, res) {
 });
 
 // Remove Player
-http.delete('/removePlayer/:id', function(req, res) {
+app.delete('/removePlayer/:id', function(req, res) {
    console.log("Removing player.");
    var id = req.params.id;
 
@@ -129,7 +129,7 @@ http.delete('/removePlayer/:id', function(req, res) {
 });
 
 // Get Player
-http.get('/getPlayer/:id', function(req, res) {
+app.get('/getPlayer/:id', function(req, res) {
    console.log("Getting player details.");
    var id = req.params.id;
    dbo.players.findOne({_id: mongojs.ObjectId(id)}, function(err, doc) {
@@ -139,7 +139,7 @@ http.get('/getPlayer/:id', function(req, res) {
 });
 
 // Get Player
-http.get('/getGame/:code', function(req, res) {
+app.get('/getGame/:code', function(req, res) {
    console.log("Getting game details.");
    var code = req.params.code;
    dbo.games.findOne({accesscode: code}, function(err, doc) {
@@ -149,7 +149,7 @@ http.get('/getGame/:code', function(req, res) {
 });
 
 // Update Player
-http.put('/updatePlayer/:id', function(req, res) {
+app.put('/updatePlayer/:id', function(req, res) {
    console.log("Updating player.");
    var id = req.params.id;
    console.log(id);
@@ -164,7 +164,7 @@ http.put('/updatePlayer/:id', function(req, res) {
 });
 
 // Get Games
-http.get('/getGames', function(req, res) {
+app.get('/getGames', function(req, res) {
    console.log("Getting games.");
    dbo.games.find({}, function(err, doc) {
       res.json(doc);
@@ -173,7 +173,7 @@ http.get('/getGames', function(req, res) {
 });
 
 // Remove Game
-http.post('/adminRemoveGame', function(req, res) {
+app.post('/adminRemoveGame', function(req, res) {
    console.log("Removing Game.");
    console.log(req.body.gameId)
 
