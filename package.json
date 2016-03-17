@@ -1,0 +1,27 @@
+{
+  "name": "credera-poker",
+  "version": "1.0.0",
+  "description": "Credera Planning Poker",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "mongojs": "^2.3.0",
+    "socket.io": "^1.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csmith467/credera-poker.git"
+  },
+  "author": "Craig Smith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/csmith467/credera-poker/issues"
+  },
+  "homepage": "https://github.com/csmith467/credera-poker#readme"
+}
