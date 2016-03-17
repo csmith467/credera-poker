@@ -11,7 +11,7 @@ app.controller('pokerController', function($scope, $http) {
    $scope.playerId = getQuerystring("player");
 
    // Connect to websocket
-   var socket = io.connect('http://127.0.0.1:8080');
+   var socket = io.connect('https://enigmatic-wildwood-29671.herokuapp.com:8080');
 
    // Add to websocket room
    socket.emit('create', $scope.gameCode);
