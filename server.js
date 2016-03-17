@@ -2,7 +2,7 @@
 var express = require('express');
 var app = express();
 var mongojs = require('mongojs');
-var dbo = mongojs('heroku_qlnfhl0c', ['players','games']);
+var dbo = mongojs('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', ['players','games']);
 var bodyParser = require('body-parser');
 var mongo = require('mongodb').MongoClient,
    client = require('socket.io').listen(8080).sockets;
