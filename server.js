@@ -7,7 +7,7 @@ var mongojs = require('mongojs');
 var dbo = mongojs('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', ['players','games']);
 var bodyParser = require('body-parser');
 var mongo = require('mongodb').MongoClient,
-   client = require('socket.io').listen(8080).sockets;
+   client = require('socket.io').listen(app).sockets;
 
 // Connect to database
 mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', function(err, db) {
