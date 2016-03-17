@@ -2,13 +2,13 @@
 var express = require('express');
 var app = express();
 var mongojs = require('mongojs');
-var dbo = mongojs('poker', ['players','games']);
+var dbo = mongojs('heroku_qlnfhl0c', ['players','games']);
 var bodyParser = require('body-parser');
 var mongo = require('mongodb').MongoClient,
    client = require('socket.io').listen(8080).sockets;
 
 // Connect to database
-mongo.connect('mongodb://127.0.0.1/poker', function(err, db) {
+mongo.connect('mongodb://heroku_qlnfhl0c:Baylor2010@ds015899.mlab.com:15899/heroku_qlnfhl0c', function(err, db) {
    if (err) throw err;
 
    // Connect to websocket
