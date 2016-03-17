@@ -1,0 +1,107 @@
+body {
+   margin: 0;
+   padding-top: 50px;
+   background-image:url("../images/background.jpg");
+}
+
+*:focus {
+    outline: none;
+}
+
+.spacer {
+   width:100%;
+   height:40px;
+}
+
+.card-box {
+   width:80px;
+   height:120px;
+   border: solid 2px #CCC;
+   border-radius: 5px;
+   margin-top: 8px;
+   margin-left: 8px;
+   float:left;
+   color:#616161;
+   text-align: center;
+   padding-top:30px;
+   font-size: 40px;
+   background: #FFF;
+}
+
+.card-box-big {
+   width:200px;
+   height:300px;
+   border: solid 2px #CCC;
+   border-radius: 5px;
+   margin-top: 8px;
+   color:#616161;
+   text-align: center;
+   padding-top:80px;
+   font-size: 90px;
+   background: #FFF;
+}
+
+.card-box:hover {
+   border: solid 2px #2196F3;
+   color:#2196F3;
+   cursor: pointer;
+}
+
+.card-wrapper {
+   width:360px;
+   height:400px;
+}
+
+.card-played-text {
+   color:#616161;
+   font-size: 20px;
+   text-align: center;
+}
+
+.estimate-average-label {
+   color:#616161;
+   font-size: 20px;
+   margin-bottom: 12px;
+   text-align: center;
+}
+
+.estimate-average {
+   color:#616161;
+   font-size: 90px;
+   margin-bottom: 12px;
+   text-align: center;
+}
+
+.playing-desc {
+   color:#616161;
+   font-size: 20px;
+   margin-bottom: 12px;
+   text-align: center;
+}
+
+.home-title {
+   color:#616161;
+   font-size: 40px;
+   margin-bottom: 12px;
+   text-align: center;
+}
+
+.no-games {
+   color:#616161;
+   font-size: 32px;
+   margin-bottom: 12px;
+   text-align: center;
+   margin-top:50px;
+}
+
+@media (max-width: 768px) {
+  #divTable {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+   #buttonBack {
+      display: none;
+   }
+}
