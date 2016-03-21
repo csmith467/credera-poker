@@ -34,11 +34,11 @@
          </button>-->
           <a class="navbar-brand" href="index.html"><img src="images/credera.png" height="25px" style="margin-top:-5px"/></a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <!--<div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="#" ng-click="endGame()">End Game</a></li>
           </ul>
-        </div>
+       </div>-->
      </div>
    </nav>
 
@@ -56,10 +56,12 @@
                </div>
             </div>
             <div class="card-played-wrapper" id="divPlayedCard" style='display:none'>
-               <div class="card-played-text">{{ player.name }}'s Estimate</div>
+               <div class="card-played-text" id="divCardHeader">{{ player.name }}'s Estimate</div>
                <div class="card-box-big" id="divPlayedCard">{{ card }}</div>
                <br>
-               <button type="button" class="btn btn-danger" ng-click="back()">Back</button>
+               <button type="button" id="buttonGoBack" class="btn btn-danger" ng-click="back()">Back</button>
+               <button type="button" id="buttonSubmit" class="btn btn-primary" ng-click="submitCard()">Submit</button>
+               <button type="button" id="buttonChange" class="btn btn-danger" ng-click="changeCard()" ng-show="showChangeButton == true">Change</button>
             </div>
          </center>
       </div>
@@ -76,7 +78,7 @@
               <tbody>
                 <tr ng-repeat="player in players">
                   <td>
-                     <span ng-show="player.admin == true &&player._id == playerId"><strong>{{ player.name }} (host)</strong></span>
+                     <span ng-show="player.admin == true && player._id == playerId"><strong>{{ player.name }} (host)</strong></span>
                      <span ng-show="player.admin == true && player._id != playerId">{{ player.name }} (host)</span>
                      <span ng-show="player.admin == false && player._id == playerId"><strong>{{ player.name }} (me)</strong></span>
                      <span ng-show="player.admin == false && player._id != playerId">{{ player.name }}</span>
@@ -86,17 +88,22 @@
                </tr>
               </tbody>
             </table>
+            <center>
+               <button type="button" class="btn btn-primary" ng-click="reveal()" ng-show="player.admin == true" style="margin-bottom:12px">Reveal</button>
+            </center>
             <div class="well">
                <div class="estimate-average-label">Average Estimate</div>
                <div class="estimate-average">{{ estimate }}</div>
             </div>
             <center>
-               <button type="button" class="btn btn-danger" id="buttonBack" ng-click="back()">Back</button>
+               <button type="button" id="buttonChange" class="btn btn-danger" ng-click="changeCard()" ng-show="showChangeButtonMobile == true">Change Estimate</button>
                <button type="button" class="btn btn-primary" ng-click="nextRound()" ng-show="player.admin == true">Next Round</button>
+               <button type="button" class="btn btn-danger" ng-click="endGame()" ng-show="player.admin == true">End Game</button>
             </center>
          </div>
       </div>
    </div>
+   <div class="screen-layout" id="screenLayout"></div>
     <!-- Javascript files -->
     <script src="js/jquery.js"></script>
     <script src="js/angular.min.js"></script>

@@ -5,9 +5,14 @@ var app = express();
 var server = http.createServer(app);
 var mongojs = require('mongojs');
 var dbo = mongojs('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', ['players','games']);
+//var dbo = mongojs('poker', ['players','games']);
 var bodyParser = require('body-parser');
-var mongo = require('mongodb').MongoClient,
-   client = require('socket.io').listen(server).sockets;
+var mongo = require('mongodb').MongoClient
+var client = require('socket.io').listen(server).sockets;
+//var client = require('socket.io').listen(8080).sockets;
+
+// mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c
+// mongodb://127.0.01/poker
 
 // Connect to database
 mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnfhl0c', function(err, db) {
@@ -60,6 +65,11 @@ mongo.connect('mongodb://pokeruser:pokerpass@ds015899.mlab.com:15899/heroku_qlnf
                sendPlayers(data.accesscode);
                client.in(data.accesscode).emit('reset');
             });
+      });
+
+      socket.on('revealEstimate', function(data) {
+         console.log("Telling all clients in room to reveal.")
+         client.in(data.accesscode).emit('reveal');
       });
 
    });

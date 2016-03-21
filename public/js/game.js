@@ -1,5 +1,13 @@
 $(document).ready(function() {
-
+   if($(".screen-layout").css("width") == "1px") {
+      $("#divTable").show();
+      $("#divPlayingCards").show();
+      $("#divPlayedCard").hide();
+   } else {
+      $("#divTable").hide();
+      $("#divPlayingCards").show();
+      $("#divPlayedCard").hide();
+   }
 });
 
 var app = angular.module('crederaApp', []);
@@ -12,6 +20,7 @@ app.controller('pokerController', function($scope, $http) {
 
    // Connect to websocket
    var socket = io.connect(window.location.hostname);
+   //var socket = io.connect('http://localhost:8080');
 
    // Add to websocket room
    socket.emit('create', $scope.gameCode);
@@ -21,7 +30,7 @@ app.controller('pokerController', function($scope, $http) {
       console.log("Got players");
       $scope.players = data;
       $scope.$apply();
-      $scope.calculate();
+      //$scope.calculate();
    });
 
    // Listen for end of game
@@ -32,13 +41,28 @@ app.controller('pokerController', function($scope, $http) {
 
    // Listen for reset (Next Round)
    socket.on('reset', function(data) {
-      if($("#divPlayedCard").is(":visible")) {
-         $("#divPlayedCard").hide();
+      if($(".screen-layout").css("width") == "1px") {
+         $("#divTable").show();
          $("#divPlayingCards").show();
+         $("#divPlayedCard").hide();
+         $scope.showChangeButton = true;
       } else {
          $("#divTable").hide();
          $("#divPlayingCards").show();
+         $("#divPlayedCard").hide();
+         $scope.showChangeButtonMobile = true;
       }
+
+      $scope.showTotals = false;
+      $scope.estimate = "--";
+      $scope.$apply();
+
+   });
+
+   // Listen for reveal
+   socket.on('reveal', function(data) {
+      console.log("Revealing cards.");
+      $scope.calculate();
    });
 
   // Set default card values
@@ -58,7 +82,9 @@ app.controller('pokerController', function($scope, $http) {
  ];
 
  $scope.showTotals = false;
- $scope.showBack = true;
+ $scope.showChangeButton = true;
+ $scope.showChangeButtonMobile = false;
+ $scope.estimate = "--";
 
    // Get player info
    $http.get("/getPlayer/" + $scope.playerId).then(function(response) {
@@ -73,18 +99,17 @@ app.controller('pokerController', function($scope, $http) {
    // Back button
    $scope.back= function() {
 
-      if($("#divPlayedCard").is(":visible")) {
-         $("#divPlayedCard").hide();
-         $("#divPlayingCards").show();
+      // Switch layout
+      if($(".screen-layout").css("width") == "1px") {
+        $("#divTable").show();
+        $("#divPlayingCards").show();
+        $("#divPlayedCard").hide();
       } else {
-         $("#divTable").hide();
-         $("#divPlayingCards").show();
+        $("#divTable").hide();
+        $("#divPlayingCards").show();
+        $("#divPlayedCard").hide();
       }
 
-      $scope.player.played = false;
-      $scope.player.estimate = "";
-      // Update Player Info
-      socket.emit('updatePlayerInfo', $scope.player);
    }
 
 // Click function of an Estimate Card
@@ -92,21 +117,65 @@ app.controller('pokerController', function($scope, $http) {
 
    // Update selected card text
     $scope.card = text;
+    $scope.cardValue = number;
 
     // Switch layout
-    if($("#divTable").is(":visible")) {
+    if($(".screen-layout").css("width") == "1px") {
+      $("#divTable").show();
       $("#divPlayingCards").hide();
       $("#divPlayedCard").show();
-   } else {
+    } else {
+      $("#divTable").hide();
       $("#divPlayingCards").hide();
-      $("#divTable").show();
-   }
+      $("#divPlayedCard").show();
+    }
 
-   // Update player info
-   $scope.player.played = true;
-   $scope.player.estimate = text;
-   socket.emit('updatePlayerInfo', $scope.player);
+   // Show/Hide buttons
+   $("#buttonGoBack").show();
+   $("#buttonSubmit").show();
+   $("#buttonChange").hide();
+
+   // Change header
+   $("#divCardHeader").text("Are you sure?");
  }
+
+ $scope.submitCard = function() {
+    // Update player info
+    $scope.player.played = true;
+    $scope.player.estimate = $scope.cardValue;
+    socket.emit('updatePlayerInfo', $scope.player);
+
+    // Switch layout
+    if($(".screen-layout").css("width") == "1px") {
+      $("#divTable").show();
+      $("#divPlayingCards").hide();
+      $("#divPlayedCard").show();
+      $scope.showChangeButton = true;
+    } else {
+      $("#divTable").show();
+      $("#divPlayingCards").hide();
+      $("#divPlayedCard").hide();
+      $scope.showChangeButtonMobile = true;
+    }
+
+    // Show/Hide buttons
+    $("#buttonGoBack").hide();
+    $("#buttonSubmit").hide();
+    $("#buttonChange").show();
+
+    // Change header
+    $("#divCardHeader").text("Your Estimate");
+}
+
+$scope.changeCard = function() {
+   // Update Player Info
+   $scope.player.played = false;
+   $scope.player.estimate = "";
+   socket.emit('updatePlayerInfo', $scope.player);
+
+   // Reset layout
+   $scope.back();
+}
 
  // Start Next Round
   $scope.nextRound= function() {
@@ -123,44 +192,51 @@ app.controller('pokerController', function($scope, $http) {
   // Calculate average estimate
  $scope.calculate= function() {
 
-    var calc = true;
+   var total = 0;
+   var count = 0;
    for (var i = 0; i < $scope.players.length; i++) {
-     if ($scope.players[i].played == false) {
-        calc = false;
-        break;
+     if ($scope.players[i].estimate != "?") {
+        if ($scope.players[i].estimate == "1/2") {
+          total += Number(0.5);
+       } else {
+         total += Number($scope.players[i].estimate);
+       }
+        count++;
      }
    }
 
-   if (calc) {
-      var total = 0;
-      var count = 0;
-      for (var i = 0; i < $scope.players.length; i++) {
-        if ($scope.players[i].estimate != "?") {
-           if ($scope.players[i].estimate == "1/2") {
-             total += Number(0.5);
-          } else {
-            total += Number($scope.players[i].estimate);
-          }
-           count++;
-        }
-      }
-
-      var est = total / count;
-      if (est % 1 === 0) {
-         $scope.estimate = est.toFixed(0);
-      } else {
-         $scope.estimate = est.toFixed(1);
-      }
-      $scope.showBack = false;
-      $scope.showTotals = true;
+   var est = total / count;
+   if (est % 1 === 0) {
+      $scope.estimate = est.toFixed(0);
    } else {
-      $scope.estimate = "--";
-      $scope.showBack = true;
-      $scope.showTotals = false;
+      $scope.estimate = est.toFixed(1);
    }
+
+   $scope.showChangeButton = false;
+   $scope.showChangeButtonMobile = false;
+   $scope.showTotals = true;
 
     $scope.$apply();
  }
+
+ // Calculate & reveal average estimate
+$scope.reveal= function() {
+
+   var reveal = true;
+   for (var i = 0; i < $scope.players.length; i++) {
+      if ($scope.players[i].played == false) {
+         reveal = false;
+         break;
+      }
+   }
+
+   if (reveal) {
+      socket.emit('revealEstimate', { accesscode: $scope.gameCode });
+   } else {
+      alert("All players have not played yet.")
+   }
+
+}
 
    $scope.getPlayers = function(code) {
       var params = { accesscode: $scope.gameCode };

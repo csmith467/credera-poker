@@ -61,14 +61,14 @@ body {
 .estimate-average-label {
    color:#616161;
    font-size: 20px;
-   margin-bottom: 12px;
+   margin-bottom: 8px;
    text-align: center;
 }
 
 .estimate-average {
    color:#616161;
    font-size: 90px;
-   margin-bottom: 12px;
+   margin-bottom: 8px;
    text-align: center;
 }
 
@@ -94,14 +94,21 @@ body {
    margin-top:50px;
 }
 
+/* Used to change the screen layout (width:1px = full screen, width:2px = mobile )*/
+.screen-layout {
+   display: none;
+   width:1px;
+}
+
+/* MOBILE */
 @media (max-width: 768px) {
-  #divTable {
-    display: none;
+
+  .screen-layout {
+     width:2px;
   }
+
 }
 
 @media (min-width: 769px) {
-   #buttonBack {
-      display: none;
-   }
+
 }
